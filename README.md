@@ -1,3 +1,3 @@
 # EE_HealthCare_AzureProject
-
+For ADF part
 https://www.youtube.com/redirect?event=video_description&redir_token=QUlxb01IWTF0c2dvV3BEcDhjV3RUSjNOTWlhOHxBQnJ0NjluN2o5bExWOUFvVHVNR0ROSWlGYkZMVW4tQ0cyN244cG8yeG5jRmFFcjZWN3hCLW11RDRtbFAtY0pPUHZuSk9BRkN4QmdOWWZKandrbktvTl96NGpQSTlYTXRGUkVs&q=https%3A%2F%2Fgithub.com%2Fdatabeli%2Fcaresync_azure_project&v=MFK7M9RS85I
