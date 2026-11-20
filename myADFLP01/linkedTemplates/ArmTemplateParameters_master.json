@@ -1,0 +1,36 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "myADFLP01"
+		},
+		"LS_ADLS_accountKey": {
+			"value": ""
+		},
+		"LS_PostgreSQL_password": {
+			"value": ""
+		},
+		"LS_ADLS_properties_typeProperties_url": {
+			"value": "https://storageacclpv0.dfs.core.windows.net/"
+		},
+		"LS_AzureKeyVault_properties_typeProperties_baseUrl": {
+			"value": "https://kvlp01.vault.azure.net/"
+		},
+		"LS_PostgreSQL_properties_typeProperties_server": {
+			"value": "ep-wispy-feather-beq25ncx-pooler.c-9.us-east-2.aws.neon.tech"
+		},
+		"LS_PostgreSQL_properties_typeProperties_database": {
+			"value": "neondb"
+		},
+		"LS_PostgreSQL_properties_typeProperties_username": {
+			"value": "neondb_owner"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}
