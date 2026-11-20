@@ -51,7 +51,7 @@
 					"batchCount": 4,
 					"activities": [
 						{
-							"name": "TestLoop",
+							"name": "Set variable",
 							"type": "SetVariable",
 							"dependsOn": [],
 							"policy": {
@@ -60,11 +60,8 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"variableName": "SetEachVar",
-								"value": {
-									"value": "@item().table_id",
-									"type": "Expression"
-								}
+								"variableName": "var1",
+								"value": ""
 							}
 						}
 					]
@@ -75,6 +72,9 @@
 			"source_system": {
 				"type": "String",
 				"defaultValue": "neon_postgres"
+			},
+			"var1": {
+				"type": "String"
 			}
 		},
 		"annotations": []
