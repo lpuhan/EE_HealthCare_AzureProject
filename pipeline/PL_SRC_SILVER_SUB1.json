@@ -51,6 +51,8 @@
 			{
 				"name": "Src to landing injestion",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "Read table Details",
