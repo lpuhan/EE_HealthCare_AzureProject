@@ -16,16 +16,11 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "AzureSqlSource",
-						"sqlReaderQuery": {
-							"value": "select * from ctrl.table_config where table_id =@{pipeline().parameters.table_id};",
-							"type": "Expression"
-						},
-						"queryTimeout": "02:00:00",
-						"partitionOption": "None"
+						"type": "PostgreSqlV2Source",
+						"queryTimeout": "02:00:00"
 					},
 					"dataset": {
-						"referenceName": "DSAzureSqlData",
+						"referenceName": "DS_PostgreSql",
 						"type": "DatasetReference"
 					},
 					"firstRowOnly": true
@@ -67,7 +62,7 @@
 				],
 				"policy": {
 					"timeout": "0.12:00:00",
-					"retry": 3,
+					"retry": 0,
 					"retryIntervalInSeconds": 30,
 					"secureOutput": false,
 					"secureInput": false
@@ -75,13 +70,12 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "AzureSqlSource",
-						"sqlReaderQuery": {
+						"type": "PostgreSqlV2Source",
+						"query": {
 							"value": "select * from public.@{activity('Read table Details').output.firstRow.source_table_name};",
 							"type": "Expression"
 						},
-						"queryTimeout": "02:00:00",
-						"partitionOption": "None"
+						"queryTimeout": "02:00:00"
 					},
 					"sink": {
 						"type": "ParquetSink",
@@ -104,7 +98,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "DSAzureSqlData",
+						"referenceName": "DS_PostgreSql",
 						"type": "DatasetReference"
 					}
 				],
@@ -115,7 +109,7 @@
 						"parameters": {
 							"container": "landing",
 							"folder": {
-								"value": "@concat(\n    activity('Read table Details').output.firstRow.source_system,\n    '/',\n    activity('Read table Details').output.firstRow.source_table_name,\n    '/',\n    variables('startTime')\n)",
+								"value": "@concat(\n    activity('Read table Details').output.firstRow.source_system,\n    '/',\n    activity('Read table Details').output.firstRow.source_table_name,\n    '/',\n    variables('startTime'),\n    '/'\n)",
 								"type": "Expression"
 							}
 						}
