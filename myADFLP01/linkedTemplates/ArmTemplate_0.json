@@ -359,8 +359,6 @@
 					{
 						"name": "Src to landing injestion",
 						"type": "Copy",
-						"state": "Inactive",
-						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [
 							{
 								"activity": "Read table Details",
@@ -424,7 +422,11 @@
 								"referenceName": "DS_ADLS_Parquet",
 								"type": "DatasetReference",
 								"parameters": {
-									"container": "landing"
+									"container": "landing",
+									"folder": {
+										"value": "@concat(\n    activity('Read table Details').output.firstRow.source_system,\n    '/',\n    activity('Read table Details').output.firstRow.source_table_name,\n    '/',\n    variables('startTime')\n)",
+										"type": "Expression"
+									}
 								}
 							}
 						]
