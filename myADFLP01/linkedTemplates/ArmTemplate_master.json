@@ -11,10 +11,6 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'LS_ADLS'"
 		},
-		"LS_PostgreSQL_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'LS_PostgreSQL'"
-		},
 		"LS_ADLS_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://storageacclpv0.dfs.core.windows.net/"
@@ -22,6 +18,18 @@
 		"LS_AzureKeyVault_properties_typeProperties_baseUrl": {
 			"type": "string",
 			"defaultValue": "https://kvlp01.vault.azure.net/"
+		},
+		"LS_AzureSqlDatabase_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "sqlserverlpvo.database.windows.net"
+		},
+		"LS_AzureSqlDatabase_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "MYSQLSERVERLP"
+		},
+		"LS_AzureSqlDatabase_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "lpuhan"
 		},
 		"LS_PostgreSQL_properties_typeProperties_server": {
 			"type": "string",
@@ -65,14 +73,20 @@
 					"LS_ADLS_accountKey": {
 						"value": "[parameters('LS_ADLS_accountKey')]"
 					},
-					"LS_PostgreSQL_password": {
-						"value": "[parameters('LS_PostgreSQL_password')]"
-					},
 					"LS_ADLS_properties_typeProperties_url": {
 						"value": "[parameters('LS_ADLS_properties_typeProperties_url')]"
 					},
 					"LS_AzureKeyVault_properties_typeProperties_baseUrl": {
 						"value": "[parameters('LS_AzureKeyVault_properties_typeProperties_baseUrl')]"
+					},
+					"LS_AzureSqlDatabase_properties_typeProperties_server": {
+						"value": "[parameters('LS_AzureSqlDatabase_properties_typeProperties_server')]"
+					},
+					"LS_AzureSqlDatabase_properties_typeProperties_database": {
+						"value": "[parameters('LS_AzureSqlDatabase_properties_typeProperties_database')]"
+					},
+					"LS_AzureSqlDatabase_properties_typeProperties_userName": {
+						"value": "[parameters('LS_AzureSqlDatabase_properties_typeProperties_userName')]"
 					},
 					"LS_PostgreSQL_properties_typeProperties_server": {
 						"value": "[parameters('LS_PostgreSQL_properties_typeProperties_server')]"

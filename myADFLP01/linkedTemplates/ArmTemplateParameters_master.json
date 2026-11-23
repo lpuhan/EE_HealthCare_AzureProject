@@ -8,14 +8,20 @@
 		"LS_ADLS_accountKey": {
 			"value": ""
 		},
-		"LS_PostgreSQL_password": {
-			"value": ""
-		},
 		"LS_ADLS_properties_typeProperties_url": {
 			"value": "https://storageacclpv0.dfs.core.windows.net/"
 		},
 		"LS_AzureKeyVault_properties_typeProperties_baseUrl": {
 			"value": "https://kvlp01.vault.azure.net/"
+		},
+		"LS_AzureSqlDatabase_properties_typeProperties_server": {
+			"value": "sqlserverlpvo.database.windows.net"
+		},
+		"LS_AzureSqlDatabase_properties_typeProperties_database": {
+			"value": "MYSQLSERVERLP"
+		},
+		"LS_AzureSqlDatabase_properties_typeProperties_userName": {
+			"value": "lpuhan"
 		},
 		"LS_PostgreSQL_properties_typeProperties_server": {
 			"value": "ep-wispy-feather-beq25ncx-pooler.c-9.us-east-2.aws.neon.tech"
