@@ -204,7 +204,7 @@
 				}
 			},
 			{
-				"name": "Insert in Success",
+				"name": "Insert Success",
 				"type": "Script",
 				"dependsOn": [
 					{
