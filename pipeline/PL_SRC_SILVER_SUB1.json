@@ -41,9 +41,9 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"variableName": "startTime",
+					"variableName": "landing_timestamp",
 					"value": {
-						"value": "@concat(formatDateTime(utcNow(),'yyyy'),'/',formatDateTime(utcNow(),'MM'),'/',formatDateTime(utcNow(),'dd'))\n",
+						"value": "@formatDateTime(utcNow(),'yyyy/MM/ddThh:mm:ss') ",
 						"type": "Expression"
 					}
 				}
@@ -53,13 +53,7 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Read table Details",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					},
-					{
-						"activity": "Set Start Time",
+						"activity": "If Condition2",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -77,7 +71,7 @@
 					"source": {
 						"type": "PostgreSqlV2Source",
 						"query": {
-							"value": "select * from public.@{activity('Read table Details').output.firstRow.source_table_name};",
+							"value": "select * \nfrom public.@{activity('Read table Details').output.firstRow.source_table_name} \n@(\n    if(equals(activity('Read table Details').output.firstRow.load_type,'FULL')\n    ,'' \n    ,concat(\n            'where ',equals(activity('Read table Details').output.firstRow.watermark_column,' > ','''',variables('watermark_value'),''''\n            )\n)",
 							"type": "Expression"
 						},
 						"queryTimeout": "02:00:00"
@@ -195,6 +189,14 @@
 						"table_name": {
 							"value": "@activity('Read table Details').output.firstRow.source_table_name",
 							"type": "Expression"
+						},
+						"load_type": {
+							"value": "@activity('Read table Details').output.firstRow.load_type",
+							"type": "Expression"
+						},
+						"merge_keys": {
+							"value": "@coalesce(activity('Read table Details').output.firstRow.merge_keys,'')",
+							"type": "Expression"
 						}
 					}
 				},
@@ -238,6 +240,85 @@
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
 				}
+			},
+			{
+				"name": "If Condition2",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Set Start Time",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Read table Details",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@not(equals(activity('Read table Details').output.load_type,'FULL'))",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "CheckWatermarkTbl",
+							"type": "Lookup",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderQuery": {
+										"value": "SELECT watermark_value FROM [ctrl].[watermark] where table_id = @{pipeline().parameters.table_id}",
+										"type": "Expression"
+									},
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"dataset": {
+									"referenceName": "DSAzureSqlData",
+									"type": "DatasetReference"
+								}
+							}
+						},
+						{
+							"name": "Set Watermark",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "CheckWatermarkTbl",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "watermark_value",
+								"value": {
+									"value": "@activity('CheckWatermarkTbl').output.firstRow.watermark_value",
+									"type": "Expression"
+								}
+							}
+						}
+					]
+				}
 			}
 		],
 		"parameters": {
@@ -253,6 +334,12 @@
 		},
 		"variables": {
 			"startTime": {
+				"type": "String"
+			},
+			"watermark_value": {
+				"type": "String"
+			},
+			"landing_timestamp": {
 				"type": "String"
 			}
 		},
