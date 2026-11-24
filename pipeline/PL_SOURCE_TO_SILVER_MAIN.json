@@ -80,6 +80,10 @@
 									"adf_run_id": {
 										"value": "@pipeline().parameters.adf_run_id",
 										"type": "Expression"
+									},
+									"sourceSystem": {
+										"value": "@pipeline().parameters.source_system",
+										"type": "Expression"
 									}
 								}
 							}
@@ -116,6 +120,8 @@
 						{
 							"name": "Insert failed",
 							"type": "Script",
+							"state": "Inactive",
+							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [
 								{
 									"activity": "Ingest Src To Silver",
