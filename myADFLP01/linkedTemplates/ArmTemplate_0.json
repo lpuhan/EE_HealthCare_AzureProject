@@ -259,7 +259,7 @@
 							"source": {
 								"type": "AzureSqlSource",
 								"sqlReaderQuery": {
-									"value": "SELECT  * FROM [ctrl].[table_config] \nwhere is_active =1 \nand source_system = 'neon_postgres'\nand table_id = @{pipeline().parameters.table_id}",
+									"value": "SELECT  * FROM [ctrl].[table_config] \nwhere is_active =1 \nand source_system = '@{pipeline().parameters.sourceSystem}'\nand table_id = @{pipeline().parameters.table_id}",
 									"type": "Expression"
 								},
 								"queryTimeout": "02:00:00",
@@ -447,7 +447,7 @@
 						}
 					},
 					{
-						"name": "Insert in Success",
+						"name": "Insert Success",
 						"type": "Script",
 						"dependsOn": [
 							{
@@ -474,7 +474,7 @@
 								{
 									"type": "Query",
 									"text": {
-										"value": "update ctrl.audit_log \nset status = 'SUCCESS' ,end_time =sysutcdatetime , records_writen= @{activity('bronze_to_silver').output.runOutput}\nwhere adf_run_id =@{pipeline().parameters.adf_run_id} \nand table_id = @{pipeline().parameters.table_id}",
+										"value": "update ctrl.audit_log \nset status = 'SUCCESS' ,end_time =sysutcdatetime(), records_written= @{activity('bronze_to_silver').output.runOutput}\nwhere adf_run_id ='@{pipeline().parameters.adf_run_id}'\nand table_id = @{pipeline().parameters.table_id}",
 										"type": "Expression"
 									}
 								}
@@ -491,6 +491,9 @@
 						"type": "string"
 					},
 					"adf_run_id": {
+						"type": "string"
+					},
+					"sourceSystem": {
 						"type": "string"
 					}
 				},
@@ -672,6 +675,10 @@
 											"adf_run_id": {
 												"value": "@pipeline().parameters.adf_run_id",
 												"type": "Expression"
+											},
+											"sourceSystem": {
+												"value": "@pipeline().parameters.source_system",
+												"type": "Expression"
 											}
 										}
 									}
@@ -697,7 +704,7 @@
 											{
 												"type": "Query",
 												"text": {
-													"value": "insert INTO \nctrl.audit_log(adf_run_id,table_id,stage,status,start_time)\nVALUES(@{pipeline().parameters.adf_run_id},@{item().table_id},'SOURCE_TO_SILVER','IN_PROGRESS',sysutcdatetime());",
+													"value": "insert INTO \nctrl.audit_log(adf_run_id,table_id,stage,status,start_time)\nVALUES('@{pipeline().parameters.adf_run_id}',@{item().table_id},'SOURCE_TO_SILVER','IN_PROGRESS',SYSUTCDATETIME())",
 													"type": "Expression"
 												}
 											}
@@ -733,7 +740,7 @@
 											{
 												"type": "Query",
 												"text": {
-													"value": "update ctrl.audit_log \nset status = 'FAILED' ,end_time =sysutcdatetime\nwhere adf_run_id =@{pipeline().parameters.adf_run_id} \nand table_id = @{item().table_id}",
+													"value": "update ctrl.audit_log \nset status = 'FAILED' ,end_time =sysutcdatetime()\nwhere adf_run_id ='@{pipeline().parameters.adf_run_id}'\nand table_id = @{item().table_id}",
 													"type": "Expression"
 												}
 											}
