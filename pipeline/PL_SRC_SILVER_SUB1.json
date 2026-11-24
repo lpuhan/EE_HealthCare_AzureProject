@@ -120,6 +120,88 @@
 						}
 					}
 				]
+			},
+			{
+				"name": "landing_To_Bronze",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "Src to landing injestion",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/caresync_health_ws/EE_CaresyncProject_ADB/landing_To_Bronze",
+					"baseParameters": {
+						"source_system": {
+							"value": "@activity('Read table Details').output.firstRow.source_system",
+							"type": "Expression"
+						},
+						"table_name": {
+							"value": "@activity('Read table Details').output.firstRow.source_table_name",
+							"type": "Expression"
+						},
+						"date": {
+							"value": "@{formatDateTime(utcNow(),'dd')}",
+							"type": "Expression"
+						},
+						"month": {
+							"value": "@{formatDateTime(utcNow(),'MM')}",
+							"type": "Expression"
+						},
+						"year": {
+							"value": "@{formatDateTime(utcNow(),'yyyy')}",
+							"type": "Expression"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "LS_AzureDatabricks",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "bronze_to_silver",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "landing_To_Bronze",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/caresync_health_ws/EE_CaresyncProject_ADB/bronze_to_silver",
+					"baseParameters": {
+						"table_name": {
+							"value": "@activity('Read table Details').output.firstRow.source_table_name",
+							"type": "Expression"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "LS_AzureDatabricks",
+					"type": "LinkedServiceReference"
+				}
 			}
 		],
 		"parameters": {
