@@ -11,6 +11,9 @@
 		"LS_ADLS_properties_typeProperties_url": {
 			"value": "https://storageacclpv0.dfs.core.windows.net/"
 		},
+		"LS_AzureDatabricks_properties_typeProperties_existingClusterId": {
+			"value": "1102-181423-ieup6mjf"
+		},
 		"LS_AzureKeyVault_properties_typeProperties_baseUrl": {
 			"value": "https://kvlp01.vault.azure.net/"
 		},
