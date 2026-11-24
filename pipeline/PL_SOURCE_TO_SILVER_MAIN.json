@@ -120,8 +120,6 @@
 						{
 							"name": "Insert failed",
 							"type": "Script",
-							"state": "Inactive",
-							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [
 								{
 									"activity": "Ingest Src To Silver",

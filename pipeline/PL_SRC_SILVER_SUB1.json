@@ -18,7 +18,7 @@
 					"source": {
 						"type": "AzureSqlSource",
 						"sqlReaderQuery": {
-							"value": "SELECT  * FROM [ctrl].[table_config] \nwhere is_active =1 \nand source_system = @{pipeline().parameters.sourceSystem}\nand table_id = @{pipeline().parameters.table_id}",
+							"value": "SELECT  * FROM [ctrl].[table_config] \nwhere is_active =1 \nand source_system = '@{pipeline().parameters.sourceSystem}'\nand table_id = @{pipeline().parameters.table_id}",
 							"type": "Expression"
 						},
 						"queryTimeout": "02:00:00",
@@ -231,7 +231,7 @@
 						{
 							"type": "Query",
 							"text": {
-								"value": "update ctrl.audit_log \nset status = 'SUCCESS' ,end_time =sysutcdatetime(), records_writen= @{activity('bronze_to_silver').output.runOutput}\nwhere adf_run_id ='@{pipeline().parameters.adf_run_id}'\nand table_id = @{pipeline().parameters.table_id}",
+								"value": "update ctrl.audit_log \nset status = 'SUCCESS' ,end_time =sysutcdatetime(), records_written= @{activity('bronze_to_silver').output.runOutput}\nwhere adf_run_id ='@{pipeline().parameters.adf_run_id}'\nand table_id = @{pipeline().parameters.table_id}",
 								"type": "Expression"
 							}
 						}
