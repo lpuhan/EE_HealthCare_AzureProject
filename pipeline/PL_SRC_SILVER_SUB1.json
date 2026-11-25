@@ -71,11 +71,11 @@
 					"notebookPath": "/caresync_health_ws/EE_CaresyncProject_ADB/landing_To_Bronze",
 					"baseParameters": {
 						"source_system": {
-							"value": "@activity('Read table Details').output.firstRow.source_system",
+							"value": "@{activity('Read table Details').output.firstRow.source_system}",
 							"type": "Expression"
 						},
 						"table_name": {
-							"value": "@activity('Read table Details').output.firstRow.source_table_name",
+							"value": "@{activity('Read table Details').output.firstRow.source_table_name}",
 							"type": "Expression"
 						},
 						"date": {
@@ -91,11 +91,11 @@
 							"type": "Expression"
 						},
 						"landing_timestamp": {
-							"value": "@variables('landing_timestamp')",
+							"value": "@{variables('landing_timestamp')}",
 							"type": "Expression"
 						},
 						"source_file_format": {
-							"value": "@activity('Read table Details').output.firstRow.source_file_format",
+							"value": "@{activity('Read table Details').output.firstRow.source_file_format}",
 							"type": "Expression"
 						}
 					}
