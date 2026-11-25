@@ -41,7 +41,7 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"variableName": "landing_timestamp",
+					"variableName": "startTime",
 					"value": {
 						"value": "@formatDateTime(utcNow(),'yyyy/MM/ddThh:mm:ss') ",
 						"type": "Expression"
@@ -155,6 +155,10 @@
 						},
 						"year": {
 							"value": "@{formatDateTime(utcNow(),'yyyy')}",
+							"type": "Expression"
+						},
+						"landing_timestamp": {
+							"value": "@variables('landing_timestamp')",
 							"type": "Expression"
 						}
 					}
