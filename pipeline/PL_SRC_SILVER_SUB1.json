@@ -32,7 +32,7 @@
 				}
 			},
 			{
-				"name": "Set Start Time",
+				"name": "Start Time",
 				"type": "SetVariable",
 				"dependsOn": [],
 				"policy": {
@@ -43,7 +43,7 @@
 				"typeProperties": {
 					"variableName": "startTime",
 					"value": {
-						"value": "@formatDateTime(utcNow(),'yyyy/MM/ddThh:mm:ss') ",
+						"value": "@concat(formatDateTime(utcNow(),'yyyy') ,\n        '/',\n        formatDateTime(utcNow(),'MM'),\n        '/',\n        formatDateTime(utcNow(),'dd')\n        )",
 						"type": "Expression"
 					}
 				}
@@ -108,7 +108,7 @@
 						"parameters": {
 							"container": "ext-adls-unity-catalog",
 							"folder": {
-								"value": "@concat(\n    'caresync',\n    '/',\n    activity('Read table Details').output.firstRow.source_system,\n    '/',\n    activity('Read table Details').output.firstRow.source_table_name,\n    '/',\n    variables('startTime'),\n    '/'\n)",
+								"value": "@concat(\n    'caresync',\n    '/',\n    activity('Read table Details').output.firstRow.source_system,\n    '/',\n    activity('Read table Details').output.firstRow.source_table_name,\n    '/',\n    variables('startTime'),\n    '/',\n    variables('landing_timestamp'),\n    '/'\n)",
 								"type": "Expression"
 							}
 						}
@@ -164,7 +164,7 @@
 					}
 				},
 				"linkedServiceName": {
-					"referenceName": "LS_AzureDatabricks",
+					"referenceName": "LS_AzureDatabricks1",
 					"type": "LinkedServiceReference"
 				}
 			},
@@ -209,7 +209,7 @@
 					}
 				},
 				"linkedServiceName": {
-					"referenceName": "LS_AzureDatabricks",
+					"referenceName": "LS_AzureDatabricks1",
 					"type": "LinkedServiceReference"
 				}
 			},
@@ -254,13 +254,19 @@
 				"type": "IfCondition",
 				"dependsOn": [
 					{
-						"activity": "Set Start Time",
+						"activity": "Start Time",
 						"dependencyConditions": [
 							"Succeeded"
 						]
 					},
 					{
 						"activity": "Read table Details",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "landing Time stamp",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -326,6 +332,23 @@
 							}
 						}
 					]
+				}
+			},
+			{
+				"name": "landing Time stamp",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "landing_timestamp",
+					"value": {
+						"value": "@formatDateTime(utcNow(),'yyyy/MM/ddThh:mm:ss') ",
+						"type": "Expression"
+					}
 				}
 			}
 		],
