@@ -346,7 +346,7 @@
 				"typeProperties": {
 					"variableName": "landing_timestamp",
 					"value": {
-						"value": "@formatDateTime(utcNow(),'yyyy/MM/ddThh:mm:ss') ",
+						"value": "@formatDateTime(utcNow(),'yyyy-MM-ddThh:mm:ss') ",
 						"type": "Expression"
 					}
 				}
