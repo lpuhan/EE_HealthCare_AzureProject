@@ -201,6 +201,10 @@
 						"merge_keys": {
 							"value": "@coalesce(activity('Read table Details').output.firstRow.merge_keys,'')",
 							"type": "Expression"
+						},
+						"landing_timestamp": {
+							"value": "@variables('landing_timestamp')",
+							"type": "Expression"
 						}
 					}
 				},
