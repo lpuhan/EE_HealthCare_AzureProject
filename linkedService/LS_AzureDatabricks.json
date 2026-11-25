@@ -12,8 +12,7 @@
 					"type": "LinkedServiceReference"
 				},
 				"secretName": "ADB-ADF-token"
-			},
-			"existingClusterId": "1102-181423-ieup6mjf"
+			}
 		}
 	}
 }
