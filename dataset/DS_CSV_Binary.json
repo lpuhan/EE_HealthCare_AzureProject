@@ -1,0 +1,26 @@
+{
+	"name": "DS_CSV_Binary",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_ADLS",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"folderName": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": {
+					"value": "@concat('caresync',\n        '/',\n        dataset().folderName)",
+					"type": "Expression"
+				},
+				"fileSystem": "ext-adls-unity-catalog"
+			}
+		}
+	}
+}
