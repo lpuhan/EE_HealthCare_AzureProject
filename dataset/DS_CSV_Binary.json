@@ -16,7 +16,7 @@
 			"location": {
 				"type": "AzureBlobFSLocation",
 				"folderPath": {
-					"value": "@concat('caresync',\n        '/',\n        dataset().folderName)",
+					"value": "@concat('caresync','/',dataset().folderName)",
 					"type": "Expression"
 				},
 				"fileSystem": "ext-adls-unity-catalog"
