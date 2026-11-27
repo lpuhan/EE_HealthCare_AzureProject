@@ -5,6 +5,10 @@
 			"email_recipent": {
 				"type": "string",
 				"value": "lalatenduazure@gmail.com;lkd.nit@gmail.com"
+			},
+			"env": {
+				"type": "string",
+				"value": "PROD"
 			}
 		}
 	},
