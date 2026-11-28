@@ -2,10 +2,6 @@
 	"name": "myADFLP01",
 	"properties": {
 		"globalParameters": {
-			"email_recipient": {
-				"type": "string",
-				"value": "lalatenduazure@gmail.com"
-			},
 			"env": {
 				"type": "string",
 				"value": "PROD"
