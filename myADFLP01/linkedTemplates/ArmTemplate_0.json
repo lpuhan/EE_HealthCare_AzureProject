@@ -377,7 +377,7 @@
 						"typeProperties": {
 							"variableName": "eMail Subject",
 							"value": {
-								"value": "@'{pipeline().globalParameters.env}' | @'{if(greater(activity('eMail Failed Count').output.firstRow.count,0),'FAILED','SUCCESS')}' |CARESYNC MASTER RUN",
+								"value": "@{pipeline().globalParameters.env} | @{if( greater(activity('eMail Failed Count').output.firstRow.count,0), 'FAILED','SUCCESS' )} | CARESYNC MASTER RUN",
 								"type": "Expression"
 							}
 						}
@@ -414,8 +414,6 @@
 					{
 						"name": "prepare logicapps body",
 						"type": "SetVariable",
-						"state": "Inactive",
-						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [
 							{
 								"activity": "eMailBody Header",
@@ -450,7 +448,41 @@
 						"typeProperties": {
 							"variableName": "logicapps Body",
 							"value": {
-								"value": "{\n\"subject\":\"@{variables('eMail Subject')}\",\n\"email_recipent\":\"@{variables('email_recipents')}\",\n\"body_header\":\"@{variables('body hader')}\",\n\"body_footer\":\"@{variables('body footer')}\",\n\"status_table\":activity('Read All Table Status').output.value\n}",
+								"value": "{\n\"subject\":\"@{variables('eMail Subject')}\",\n\"email_recipent\":\"@{variables('email_recipents')}\",\n\"body_header\":\"@{variables('body hader')}\",\n\"body_footer\":\"@{variables('body footer')}\",\n\"status_table\":@{activity('Read All Table Status').output.value}\n}",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "send eMail",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "prepare logicapps body",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"method": "POST",
+							"headers": {
+								"Content-Type": "application/json"
+							},
+							"url": {
+								"value": "@pipeline().globalParameters.logicapp_url",
+								"type": "Expression"
+							},
+							"body": {
+								"value": "@variables('logicapps Body')",
 								"type": "Expression"
 							}
 						}
