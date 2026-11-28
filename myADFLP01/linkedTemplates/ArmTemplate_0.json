@@ -448,7 +448,7 @@
 						"typeProperties": {
 							"variableName": "logicapps Body",
 							"value": {
-								"value": "{\n\"subject\":\"@{variables('eMail Subject')}\",\n\"email_recipent\":\"@{variables('email_recipents')}\",\n\"body_header\":\"@{variables('body hader')}\",\n\"body_footer\":\"@{variables('body footer')}\",\n\"status_table\":@{activity('Read All Table Status').output.value}\n}",
+								"value": "{\n\"subject\":\"@{variables('eMail Subject')}\",\n\"email_recipent\":\"@{pipeline().globalParameters.email_recipient}\",\n\"body_header\":\"@{variables('body hader')}\",\n\"body_footer\":\"@{variables('body footer')}\",\n\"status_table\":@{activity('Read All Table Status').output.value}\n}",
 								"type": "Expression"
 							}
 						}
@@ -497,9 +497,6 @@
 					}
 				},
 				"variables": {
-					"email_recipents": {
-						"type": "String"
-					},
 					"body hader": {
 						"type": "String"
 					},
