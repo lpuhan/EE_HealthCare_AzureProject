@@ -4,7 +4,7 @@
 		"globalParameters": {
 			"email_recipent": {
 				"type": "string",
-				"value": "lalatenduazure@gmail.com;lkd.nit@gmail.com"
+				"value": "lalatenduazure@gmail.com"
 			},
 			"env": {
 				"type": "string",
