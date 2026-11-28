@@ -267,7 +267,10 @@
 				"annotations": [],
 				"type": "AzureSqlTable",
 				"schema": [],
-				"typeProperties": {}
+				"typeProperties": {
+					"schema": "ctrl",
+					"table": "audit_log"
+				}
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/LS_AzureSqlDatabase')]"
@@ -1114,6 +1117,197 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/DS_PostgreSql')]",
 				"[concat(variables('factoryId'), '/datasets/DS_ADLS_Parquet')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_EMAIL')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Read All Table Status",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": {
+									"value": "SELECT  * FROM ctrl.audit_log where  adf_run_id = '@{pipeline().parameters.adf_run_id}'",
+									"type": "Expression"
+								},
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "DSAzureSqlData",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "eMailBody Header",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "body hader",
+							"value": "Injestion and transformation for caresink project has been completed and below is the status "
+						}
+					},
+					{
+						"name": "eMailBody Footer",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "body footer",
+							"value": "for any support please reach out to Laxman lkdas@gmail.com"
+						}
+					},
+					{
+						"name": "eMail Subject",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "eMail Failed Count",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "eMail Subject",
+							"value": {
+								"value": "@'{pipeline().globalParameters.env}' | @'{if(greater(activity('eMail Failed Count').output.firstRow.count,0),'FAILED','SUCCESS')}' |CARESYNC MASTER RUN",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "eMail Failed Count",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": {
+									"value": "SELECT  count(status) as count FROM ctrl.audit_log \nwhere  adf_run_id = '@{pipeline().parameters.adf_run_id}' \nand STATUS != 'SUCCESS'\n;\n",
+									"type": "Expression"
+								},
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "DSAzureSqlData",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "prepare logicapps body",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "eMailBody Header",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "eMailBody Footer",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "Read All Table Status",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "eMail Subject",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "logicapps Body",
+							"value": {
+								"value": "{\n\"subject\":\"@{variables('eMail Subject')}\",\n\"email_recipent\":\"@{variables('email_recipents')}\",\n\"body_header\":\"@{variables('body hader')}\",\n\"body_footer\":\"@{variables('body footer')}\",\n\"status_table\":activity('Read All Table Status').output.value\n}",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"adf_run_id": {
+						"type": "string"
+					}
+				},
+				"variables": {
+					"email_recipents": {
+						"type": "String"
+					},
+					"body hader": {
+						"type": "String"
+					},
+					"body footer": {
+						"type": "String"
+					},
+					"eMail Subject": {
+						"type": "String"
+					},
+					"logicapps Body": {
+						"type": "String"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/DSAzureSqlData')]"
 			]
 		},
 		{
