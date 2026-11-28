@@ -1,0 +1,42 @@
+{
+	"name": "PL_EMAIL",
+	"properties": {
+		"activities": [
+			{
+				"name": "Read All Table Status",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": {
+							"value": "SELECT  * FROM ctrl.audit_log where  adf_run_id = @{pipeline().parameters.adf_run_id}",
+							"type": "Expression"
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "DSAzureSqlData",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			}
+		],
+		"parameters": {
+			"adf_run_id": {
+				"type": "string"
+			}
+		},
+		"annotations": []
+	}
+}
